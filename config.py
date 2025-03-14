@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVER_KEY = os.getenv("SUPABASE_SERVER_KEY")
 
 # URL di base
 API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"

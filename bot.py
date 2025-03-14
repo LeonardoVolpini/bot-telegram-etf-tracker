@@ -1,6 +1,7 @@
 import requests
 from config import API_URL
 from etf_service import get_etf_price
+import database as db
 
 
 # Dizionario per tenere traccia degli ETF monitorati per ogni utente
@@ -20,6 +21,8 @@ def start(update):
     """Messaggio di benvenuto"""
 
     chat_id = update["message"]["chat"]["id"]
+    username = update["message"]["chat"]["username"]
+    db.add_user(username)
     send_message(chat_id, "Hi! I'm your bot for monitoring ETFs.\n"
                             "I will help you get instant notifications when an ETF goes down by x % from its high of the last y days.\n"
                             "Use /help to see the available commands.")
@@ -39,6 +42,7 @@ def track_etf(update):
     """Aggiunge un ETF al tracking"""
 
     chat_id = update["message"]["chat"]["id"]
+    username = update["message"]["chat"]["username"]
     text = update["message"]["text"].split()
 
     if len(text) != 4:
@@ -58,6 +62,7 @@ def track_etf(update):
         user_tracking[chat_id] = {}
 
     user_tracking[chat_id][symbol] = {"threshold": threshold, "days": days}
+    db.add_etf(username, symbol, threshold, days)
     send_message(chat_id, f"✅ Now you're tracking {symbol}: {threshold}% loss in last {days} days")
 
 
@@ -65,6 +70,7 @@ def remove_etf(update):
     """Rimuove un ETF dal monitoraggio."""
 
     chat_id = update["message"]["chat"]["id"]
+    username = update["message"]["chat"]["username"]
     text = update["message"]["text"].split()
 
     if len(text) != 2:
@@ -75,6 +81,7 @@ def remove_etf(update):
 
     if chat_id in user_tracking and symbol in user_tracking[chat_id]:
         del user_tracking[chat_id][symbol]
+        db.remove_etf(username, symbol)
         send_message(chat_id, f"🚀 {symbol} removed from tracking!")
     else:
         send_message(chat_id, "❌ ETF was not in tracking status")
@@ -85,13 +92,16 @@ def etfs(update):
     """Mostra gli ETF attualmente monitorati."""
 
     chat_id = update["message"]["chat"]["id"]
-    if chat_id not in user_tracking or not user_tracking[chat_id]:
-        send_message(chat_id, "📉 You are not tracking any ETFs.")
+    username = update["message"]["chat"]["username"]
+    
+    etfs = db.get_tracked_etfs(username)
+    if not etfs:
+        send_message(chat_id, "🚀 You are not tracking any ETFs.")
         return
     
     message = "📈 Currently tracking:\n"
-    for etf, details in user_tracking[chat_id].items():
-        message += f"{etf}: {details['threshold']}% loss in last {details['days']} days\n"
+    for etf in etfs:
+        message += f"{etf['symbol']}: {etf['threshold']}% loss in last {etf['days']} days\n"
     
     send_message(chat_id, message)
 
