@@ -4,10 +4,6 @@ from etf_service import get_etf_price
 import database as db
 
 
-# Dizionario per tenere traccia degli ETF monitorati per ogni utente
-user_tracking = {}
-
-
 def send_message(chat_id, text):
     """Invia un messaggio Telegram"""
 
@@ -58,10 +54,6 @@ def track_etf(update):
         send_message(chat_id, "❌ Threshold must be a float number and days must be an integer number!")
         return
 
-    if chat_id not in user_tracking:
-        user_tracking[chat_id] = {}
-
-    user_tracking[chat_id][symbol] = {"threshold": threshold, "days": days}
     db.add_etf(username, symbol, threshold, days)
     send_message(chat_id, f"✅ Now you're tracking {symbol}: {threshold}% loss in last {days} days")
 
@@ -78,13 +70,7 @@ def remove_etf(update):
         return
 
     symbol = text[1].upper()
-
-    if chat_id in user_tracking and symbol in user_tracking[chat_id]:
-        del user_tracking[chat_id][symbol]
-        db.remove_etf(username, symbol)
-        send_message(chat_id, f"🚀 {symbol} removed from tracking!")
-    else:
-        send_message(chat_id, "❌ ETF was not in tracking status")
+    send_message(chat_id, f"🚀 {symbol} removed from tracking!")
 
 
 
