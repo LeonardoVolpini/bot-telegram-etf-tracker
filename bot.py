@@ -42,7 +42,7 @@ def track_etf(update):
     text = update["message"]["text"].split()
 
     if len(text) != 4:
-        send_message(chat_id, "⚠️ Uea command: /track <etf_symbol> <threshold> <days>")
+        send_message(chat_id, "⚠️ Use command: /track <etf_symbol> <threshold> <days>")
         return
     
     symbol, threshold, days = text[1].upper(), text[2], text[3]
@@ -81,6 +81,20 @@ def remove_etf(update):
 
 
 
+def etfs(update):
+    """Mostra gli ETF attualmente monitorati."""
+
+    chat_id = update["message"]["chat"]["id"]
+    if chat_id not in user_tracking or not user_tracking[chat_id]:
+        send_message(chat_id, "📉 You are not tracking any ETFs.")
+        return
+    
+    message = "📈 Currently tracking:\n"
+    for etf, details in user_tracking[chat_id].items():
+        message += f"{etf}: {details['threshold']}% loss in last {details['days']} days\n"
+    
+    send_message(chat_id, message)
+
 def handle_message(update):
     """Gestisce i messaggi ricevuti dal bot."""
     
@@ -90,9 +104,11 @@ def handle_message(update):
         start(update)
     elif text == "/help":
         help(update)
-    elif text == "/track":
+    elif text.startswith("/track"):
         track_etf(update)
-    elif text == "/remove":
+    elif text.startswith("/remove"):
         remove_etf(update)
+    elif text == "/etfs":
+        etfs(update)    
     else:
         send_message(update["message"]["chat"]["id"], "⚠️ Unknown command. Use /help for see list of commands.")

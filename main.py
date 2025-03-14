@@ -6,6 +6,7 @@ URL = f"{API_URL}/getUpdates"
 
 def get_updates(offset=None):
     """Recupera gli aggiornamenti dal bot Telegram."""
+
     params = {"timeout": 30, "offset": offset}
     response = requests.get(URL, params=params)
     
@@ -14,7 +15,7 @@ def get_updates(offset=None):
     return []
 
 def main():
-    print("🤖 Bot ETF Tracker avviato...")
+    print("🤖 Bot ETF Tracker started...")
     last_update_id = None
 
     while True:
