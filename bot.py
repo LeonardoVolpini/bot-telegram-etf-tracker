@@ -153,8 +153,15 @@ def etfs(update):
 
 def handle_message(update):
     """Gestisce i messaggi ricevuti dal bot."""
-    
+
+    chat_id = update["message"]["chat"]["id"]
+    username = update["message"]["chat"]["username"]
     text = update["message"]["text"].lower().strip()
+
+    user = db.get_user_chat_id(username)
+    if not user and text != "/start":
+        send_message(chat_id,"⚠️ Please start the bot using /start before using other commands.")
+        return
 
     if text == "/start":
         start(update)
