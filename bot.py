@@ -1,6 +1,6 @@
 import requests
 from config import API_URL
-from etf_service import get_etf_price, validate_etf_symbol
+from etf_service import get_etf_price, validate_etf_symbol, get_etf_info
 import database as db
 
 
@@ -55,7 +55,8 @@ def track_etf(update):
                                 "Example: /track SPY 10 30")
         return
     
-    symbol, threshold, days = text[1].upper(), text[2], text[3]
+    base_symbol = text[1].upper()
+    threshold, days = text[2], text[3]
 
     try:
         threshold = float(threshold)
@@ -73,13 +74,21 @@ def track_etf(update):
         send_message(chat_id, "❌ Threshold must be a positive number and days must be a positive integer!")
         return
     
-    # Verifica che il simbolo ETF sia valido
-    if not validate_etf_symbol(symbol):
-        send_message(chat_id, f"❌ Could not find ETF with symbol '{symbol}'. Please check and try again.")
+    # Invia messaggio per far sapere all'utente che stiamo cercando l'ETF
+    send_message(chat_id, f"🔍 Searching for ETF {base_symbol}...")
+
+    # Ottieni informazioni sull'ETF
+    etf_info = get_etf_info(base_symbol)
+
+    if not etf_info:
+        send_message(chat_id, f"❌ Could not find ETF with symbol '{base_symbol}'. Please check and try again.")
         return
 
-    db.add_etf(username, symbol, threshold, days)
-    send_message(chat_id, f"✅ Now tracking {symbol}:\n"
+    # Usa il simbolo corretto (che potrebbe includere un suffisso di borsa)
+    correct_symbol = etf_info['symbol']
+
+    db.add_etf(username, correct_symbol, threshold, days)
+    send_message(chat_id, f"✅ Now tracking {correct_symbol}:\n"
                             f"Will notify when it drops {threshold}% from its {days}-day high.")
 
 

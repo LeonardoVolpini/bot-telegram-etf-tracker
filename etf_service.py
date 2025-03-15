@@ -25,6 +25,11 @@ def get_etf_historical_data(symbol: str, days: int):
     Restituisce una lista di tuple (data, prezzo).
     """
 
+    symbol = _get_valid_symbol(symbol)
+    if not symbol:
+        print("Invalid ETF symbol")
+        return None
+
     try:
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days)
@@ -48,20 +53,19 @@ def get_etf_historical_data(symbol: str, days: int):
 
 
 def validate_etf_symbol(symbol: str):
-    """Verifica se un simbolo ETF è valido."""
-    
-    try:
-        ticker = yf.Ticker(symbol)
-        info = ticker.info
+    """Verifica se un simbolo ETF è valido e restituisce il simbolo corretto se trovato."""
 
-        return 'longName' in info and info['longName'] is not None
-    except:
-        return False
+    valid_symbol = _get_valid_symbol(symbol)
+    return valid_symbol is not None
     
 
 def get_etf_info(symbol: str):
     """Ottiene informazioni dettagliate su un ETF."""
-    
+
+    symbol = _get_valid_symbol(symbol)
+    if not symbol:
+        return None
+
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
@@ -76,3 +80,59 @@ def get_etf_info(symbol: str):
     except Exception as e:
         print(f"Error getting info for {symbol}: {e}")
         return None
+    
+def _get_valid_symbol(symbol):
+    """Ottiene un simbolo valido per Yahoo Finance."""
+
+    # Prima prova il simbolo esatto
+    try:
+        ticker = yf.Ticker(symbol)
+        info = ticker.info
+        
+        # Verifica se abbiamo ricevuto dati validi
+        if 'regularMarketPrice' in info and info['regularMarketPrice'] is not None:
+            return symbol
+    except:
+        pass
+    
+    # Se non funziona, prova le varianti
+    return _try_symbol_variants(symbol)
+
+def _try_symbol_variants(base_symbol):
+    """Prova diverse varianti di suffissi per borse europee."""
+
+    # Lista di suffissi comuni per le borse europee
+    exchange_suffixes = [
+        '.L',   # London
+        '.MI',  # Milano
+        '.PA',  # Parigi
+        '.DE',  # Germania
+        '.AS',  # Amsterdam
+        '.BR',  # Bruxelles
+        '.MC',  # Madrid
+        '.VI',  # Vienna
+        '.SW',  # Svizzera
+        '.ST',  # Stoccolma
+        '.CO',  # Copenhagen
+        '.HE',  # Helsinki
+        '.LS',  # Lisbona
+        '.IR',  # Irlanda
+        '.F',   # Francoforte
+        '.MU',  # Monaco
+        '',     # Senza suffisso
+    ]
+    
+    for suffix in exchange_suffixes:
+        try:
+            test_symbol = f"{base_symbol}{suffix}"
+            ticker = yf.Ticker(test_symbol)
+            info = ticker.info
+            
+            # Verifica se abbiamo ricevuto dati validi
+            if 'regularMarketPrice' in info and info['regularMarketPrice'] is not None:
+                print(f"Simbolo valido trovato: {test_symbol}")
+                return test_symbol
+        except Exception as e:
+            continue
+    
+    return None
