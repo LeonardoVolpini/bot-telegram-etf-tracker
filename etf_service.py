@@ -104,20 +104,20 @@ def _try_symbol_variants(base_symbol):
 
     # Lista di suffissi comuni per le borse europee
     exchange_suffixes = [
-        '.L',   # London
-        '.MI',  # Milano
-        '.PA',  # Parigi
         '.DE',  # Germania
+        '.PA',  # Parigi
         '.AS',  # Amsterdam
+        '.MI',  # Milano
+        '.L',   # London
         '.BR',  # Bruxelles
-        '.MC',  # Madrid
+        '.LS',  # Lisbona
+        '.IR',  # Irlanda
         '.VI',  # Vienna
+        '.MC',  # Madrid
         '.SW',  # Svizzera
         '.ST',  # Stoccolma
         '.CO',  # Copenhagen
         '.HE',  # Helsinki
-        '.LS',  # Lisbona
-        '.IR',  # Irlanda
         '.F',   # Francoforte
         '.MU',  # Monaco
         '',     # Senza suffisso
