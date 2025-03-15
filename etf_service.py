@@ -72,6 +72,7 @@ def get_etf_info(symbol: str):
         
         return {
             'name': info.get('longName', 'N/A'),
+            'symbol': symbol,  # Restituisce il simbolo corretto con il suffisso della borsa
             'currency': info.get('currency', 'N/A'),
             'exchange': info.get('exchange', 'N/A'),
             'sector': info.get('sector', 'N/A'),
