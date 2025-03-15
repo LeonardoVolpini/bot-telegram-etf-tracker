@@ -38,6 +38,7 @@ def help(update):
                             "/help - Get help with the bot\n"
                             "/track <etf_symbol> <percentage_threshold> <days_back>\n"
                             "/remove <etf_symbol> - Stop tracking an ETF\n"
+                            "/etfs - List the ETFs you're tracking\n\n"
                             "Example: /track SPY 10 30\n"
                             "This will notify you when SPY drops 10% from its 30-day high.")
     
@@ -114,7 +115,7 @@ def etfs(update):
     
     etfs = db.get_tracked_etfs(username)
     if not etfs:
-        send_message(chat_id, "🚀 You are not tracking any ETFs.")
+        send_message(chat_id, "You are not tracking any ETFs.")
         return
     
     message = "📈 Your tracked ETFs:\n\n"
