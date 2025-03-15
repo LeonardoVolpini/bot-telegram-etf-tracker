@@ -34,7 +34,7 @@ def get_etf_historical_data(symbol: str, days: int):
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days)
 
-        ticker = yf.Ticker(symbol=symbol)
+        ticker = yf.Ticker(symbol)
         data = ticker.history(start=start_date, end=end_date)
 
         if data.empty:
