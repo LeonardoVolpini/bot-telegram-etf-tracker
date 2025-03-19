@@ -11,4 +11,4 @@ SUPABASE_SERVER_KEY = os.getenv("SUPABASE_SERVER_KEY")
 API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
 # Configuration for monitoring
-MONITORING_INTERVAL = 60  # minutes
+MONITORING_INTERVAL = 120  # minutes

@@ -7,13 +7,20 @@ def get_etf_price(symbol: str):
     try:
         ticker = yf.Ticker(symbol)
 
-        # Get last available price
-        price = ticker.history(period="1d")
+        # Ottieni le informazioni in tempo reale
+        live_info = ticker.info
 
-        if price.empty:
-            print(f"No data available for {symbol}")
-            return None
-        
+        # Ottieni il prezzo attuale del mercato
+        if 'currentPrice' in live_info:
+            return float(live_info['currentPrice'])
+        elif 'regularMarketPrice' in live_info:
+            return float(live_info['regularMarketPrice'])
+        else:
+            # Fallback: se non è disponibile il prezzo attuale, usa il prezzo di chiusura più recente
+            price = ticker.history(period="1d")
+            if price.empty:
+                print(f"No data available for {symbol}")
+                return None
         return float(price["Close"].iloc[-1])
     except Exception as e:
         print(f"Error getting price for {symbol}: {e}")

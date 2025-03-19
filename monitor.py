@@ -4,6 +4,7 @@ import database as db
 import bot
 from etf_service import get_etf_price, get_etf_historical_data
 from datetime import datetime
+from config import MONITORING_INTERVAL
 
 def check_etfs_thresholds():
     """
@@ -107,4 +108,4 @@ def start_monitoring():
     
     while True:
         schedule.run_pending()
-        time.sleep(60)  # Controlla ogni minuto se ci sono jobs da eseguire
+        time.sleep(MONITORING_INTERVAL)  # Controlla ogni MONITORING_INTERVAL minuti se ci sono jobs da eseguire
