@@ -3,6 +3,8 @@
 Il bot Telegram, @ETFtrackingBot, monitora automaticamente gli ETF e invia notifiche quando il prezzo scende di una percentuale specificata rispetto al massimo degli ultimi x giorni.
 Successivamente invia notifiche solamente se il prezzo scende di un ulteriore punto percentuale o recupera per rientra dentro la soglia.
 
+Link: https://t.me/ETFtrackingBot
+
 ## Struttura del progetto
 
 - `main.py` - Punto di ingresso dell'applicazione

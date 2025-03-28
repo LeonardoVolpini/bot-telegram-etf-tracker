@@ -68,8 +68,8 @@ def check_etfs_thresholds():
         elif last_notification:
             last_notified_loss = last_notification.get('loss_pct', 0)
 
-            # Caso 1: il prezzo è peggiorato di almeno 1% dall'ultima notidica
-            if loss_pct >= last_notified_loss + 1:
+            # Caso 1: il prezzo è peggiorato di almeno 1% dall'ultima notifica && siamo oltre la soglia
+            if loss_pct >= last_notified_loss + 1 and loss_pct >= threshold_pct:
                 should_notify = True
                 notification_message = (
                     f"📉 UPDATE: ETF {symbol} has dropped further to {loss_pct:.2f}% from its {days}-day high!\n"
