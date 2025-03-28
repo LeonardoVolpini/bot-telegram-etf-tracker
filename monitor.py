@@ -59,7 +59,8 @@ def check_etfs_thresholds():
         if not last_notification and loss_pct >= threshold_pct:
             should_notify = True
             notification_message = (
-                f"🚨 ALERT! ETF {symbol} - {name} has dropped {loss_pct:.2f}% from its {days}-day high!\n"
+                f"🚨 ALERT! ETF {symbol} - {name}\n"
+                f"Has dropped {loss_pct:.2f}% from its {days}-day high!\n"
                 f"Maximum price: ${max_price:.2f}\n"
                 f"Current price: ${current_price:.2f}\n"
                 f"Loss: ${max_price - current_price:.2f} ({loss_pct:.2f}%)"
@@ -73,7 +74,8 @@ def check_etfs_thresholds():
             if loss_pct >= last_notified_loss + 1 and loss_pct >= threshold_pct:
                 should_notify = True
                 notification_message = (
-                    f"📉 UPDATE: ETF {symbol} - {name} has dropped further to {loss_pct:.2f}% from its {days}-day high!\n"
+                    f"📉 UPDATE: ETF {symbol} - {name} \n"
+                    f"Has dropped further to {loss_pct:.2f}% from its {days}-day high!\n"
                     f"Maximum price: ${max_price:.2f}\n"
                     f"Current price: ${current_price:.2f}\n"
                     f"Last notified loss: {last_notified_loss:.2f}%\n"
@@ -84,7 +86,8 @@ def check_etfs_thresholds():
             elif loss_pct <= (threshold_pct - 0.5) and last_notified_loss > threshold_pct:
                 should_notify = True
                 notification_message = (
-                    f"📈 RECOVERY: ETF {symbol} - {name} has improved to {loss_pct:.2f}% from its {days}-day high!\n"
+                    f"📈 RECOVERY: ETF {symbol} - {name} \n"
+                    f"Has improved to {loss_pct:.2f}% from its {days}-day high!\n"
                     f"Maximum price: ${max_price:.2f}\n"
                     f"Current price: ${current_price:.2f}\n"
                     f"Previous loss: {last_notified_loss:.2f}%\n"
