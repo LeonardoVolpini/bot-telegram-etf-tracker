@@ -18,7 +18,7 @@ def add_user(username, chat_id=None):
         # Update chat_id, if it is changed
         supabase.table("Users").update({"chat_id": chat_id}).eq("username", username).execute()
 
-def add_etf(user, symbol, threshold, days):
+def add_etf(user, symbol, name, threshold, days):
     """Aggiunge un ETF al tracking per un utente"""
 
     # Controlla se l'ETF è già monitorato dall'utente
@@ -37,7 +37,8 @@ def add_etf(user, symbol, threshold, days):
             "symbol": symbol,
             "price_max": 0,  # Inizialmente 0, poi verrà aggiornato
             "threshold": threshold,
-            "days": days
+            "days": days,
+            "name": name
         }).execute()
 
 def remove_etf(user, symbol):

@@ -1,6 +1,6 @@
 import requests
 from config import API_URL
-from etf_service import get_etf_price, validate_etf_symbol, get_etf_info
+from etf_service import get_etf_price, get_etf_info
 import database as db
 
 
@@ -87,8 +87,8 @@ def track_etf(update):
     # Usa il simbolo corretto (che potrebbe includere un suffisso di borsa)
     correct_symbol = etf_info['symbol']
 
-    db.add_etf(username, correct_symbol, threshold, days)
-    send_message(chat_id, f"✅ Now tracking {correct_symbol}:\n"
+    db.add_etf(username, correct_symbol, etf_info['name'], threshold, days)
+    send_message(chat_id, f"✅ Now tracking {correct_symbol}: {etf_info['name']}\n"
                             f"Will notify when it drops {threshold}% from its {days}-day high.")
 
 
