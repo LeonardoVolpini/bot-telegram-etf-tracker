@@ -132,6 +132,7 @@ def etfs(update):
         symbol = etf['symbol']
         threshold = etf['threshold']
         days = etf['days']
+        name = etf['name']
         price_max = etf['price_max'] if etf['price_max'] > 0 else "Calculating..."
 
          # Ottieni il prezzo attuale se il prezzo massimo è stato calcolato
@@ -139,14 +140,14 @@ def etfs(update):
             current_price = get_etf_price(symbol)
             if current_price:
                 loss_pct = ((etf['price_max'] - current_price) / etf['price_max']) * 100
-                message += f"{symbol}: {threshold}% threshold over {days} days\n"
+                message += f"{symbol} - {name}: {threshold}% threshold over {days} days\n"
                 message += f"  Max: ${price_max:.2f}, Current: ${current_price:.2f}\n"
                 message += f"  Current loss: {loss_pct:.2f}%\n\n"
             else:
-                message += f"{symbol}: {threshold}% threshold over {days} days\n"
+                message += f"{symbol} - {name}: {threshold}% threshold over {days} days\n"
                 message += f"  Max: ${price_max:.2f}, Current: Unable to fetch\n\n"
         else:
-            message += f"{symbol}: {threshold}% threshold over {days} days\n"
+            message += f"{symbol} - {name}: {threshold}% threshold over {days} days\n"
             message += f"  Status: Setting up tracking...\n\n"
     
     send_message(chat_id, message)
