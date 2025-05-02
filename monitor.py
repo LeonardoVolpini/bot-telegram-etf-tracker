@@ -106,9 +106,9 @@ def start_monitoring():
     """Avvia il monitoraggio degli ETF"""
     
     # Imposta un job per eseguire i controlli ogni ora
-    schedule.every(1).hour.do(check_etfs_thresholds)
+    schedule.every(MONITORING_INTERVAL).hour.do(check_etfs_thresholds)
     
-    print("ETF monitoring started. Checking every hour.")
+    print("ETF monitoring started. Checking every two hours.")
     
     while True:
         schedule.run_pending()
